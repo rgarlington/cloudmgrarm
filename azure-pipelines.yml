@@ -20,5 +20,6 @@ steps:
     location: 'South Central US'
     templateLocation: 'URL of the file'
     csmFileLink: 'https://raw.githubusercontent.com/rgarlington/cloudmgrarm/refs/heads/main/cloudmanager_template.json'
+    csmParametersFileLink: 'https://raw.githubusercontent.com/rgarlington/cloudmgrarm/refs/heads/main/cloudmanager_parameters.json'
     deploymentMode: 'Incremental'
-    deploymentName: 'DeployCloudMgr'
+    deploymentName: 'deploycloudmgr'
