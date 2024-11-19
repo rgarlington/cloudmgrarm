@@ -1,0 +1,25 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+- task: AzureResourceManagerTemplateDeployment@3
+  inputs:
+    deploymentScope: 'Resource Group'
+    azureResourceManagerConnection: 'cldmgrsvcconnection'
+    subscriptionId: 'e620d98a-65b1-4439-9bdc-7e496eae7ff2'
+    action: 'Create Or Update Resource Group'
+    resourceGroupName: 'cldmgr-t10110-20241031'
+    location: 'South Central US'
+    templateLocation: 'URL of the file'
+    csmFileLink: 'https://raw.githubusercontent.com/rgarlington/cloudmgrarm/refs/heads/main/cloudmanager_template.json'
+    overrideParameters: '-projectName ITF-CloudManager'
+    deploymentMode: 'Incremental'
+    deploymentName: 'deploycloudmgr'
