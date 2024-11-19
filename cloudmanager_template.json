@@ -1,0 +1,168 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "extensions_enablevmAccess_username": {
+            "type": "SecureString"
+        },
+        "extensions_enablevmAccess_password": {
+            "type": "SecureString"
+        },
+        "extensions_enablevmAccess_ssh_key": {
+            "type": "SecureString"
+        },
+        "extensions_enablevmAccess_reset_ssh": {
+            "type": "SecureString"
+        },
+        "extensions_enablevmAccess_remove_user": {
+            "type": "SecureString"
+        },
+        "extensions_enablevmAccess_expiration": {
+            "type": "SecureString"
+        },
+        "virtualMachines_cpl_cloud_mgr_name": {
+            "defaultValue": "cpl-cloud-mgr",
+            "type": "String"
+        },
+        "disks_itf_cpl_cloud_mgr_OsDisk_1_externalid": {
+            "defaultValue": "/subscriptions/e620d98a-65b1-4439-9bdc-7e496eae7ff2/resourceGroups/cldmgr-t10110-20241031/providers/Microsoft.Compute/disks/itf-cpl-cloud-mgr_OsDisk_1_da59397920e14c61b42f5479be01be28",
+            "type": "String"
+        },
+        "networkInterfaces_cpl_cloud_mgr_externalid": {
+            "defaultValue": "/subscriptions/e620d98a-65b1-4439-9bdc-7e496eae7ff2/resourceGroups/cldmgr-t10110-20241031/providers/Microsoft.Network/networkInterfaces/itf-cpl-cloud-mgr131_z1",
+            "type": "String"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Compute/virtualMachines",
+            "apiVersion": "2024-07-01",
+            "name": "[parameters('virtualMachines_cpl_cloud_mgr_name')]",
+            "location": "southcentralus",
+            "tags": {
+                " OwnerEmail": "robert.garlington@chevron.com"
+            },
+            "zones": [
+                "1"
+            ],
+            "identity": {
+                "type": "UserAssigned",
+                "userAssignedIdentities": {
+                    "/subscriptions/e620d98a-65b1-4439-9bdc-7e496eae7ff2/resourceGroups/cldmgr-t10110-20241031/providers/Microsoft.ManagedIdentity/userAssignedIdentities/cldmgr-t10110-20241031-identity": {}
+                }
+            },
+            "plan": {
+                "name": "occm-byol",
+                "product": "netapp-oncommand-cloud-manager",
+                "publisher": "netapp"
+            },
+            "properties": {
+                "hardwareProfile": {
+                    "vmSize": "Standard_DS11_v2"
+                },
+                "additionalCapabilities": {
+                    "hibernationEnabled": false
+                },
+                "storageProfile": {
+                    "imageReference": {
+                        "publisher": "netapp",
+                        "offer": "netapp-oncommand-cloud-manager",
+                        "sku": "occm-byol",
+                        "version": "latest"
+                    },
+                    "osDisk": {
+                        "osType": "Linux",
+                        "name": "[concat(parameters('virtualMachines_cpl_cloud_mgr_name'), '_OsDisk_1')]",
+                        "createOption": "FromImage",
+                        "caching": "ReadWrite",
+                        "managedDisk": {
+                            "storageAccountType": "Premium_LRS",
+                            "id": "[parameters('disks_cpl_cloud_mgr_OsDisk_1_externalid')]"
+                        },
+                        "deleteOption": "Delete",
+                        "diskSizeGB": 100
+                    },
+                    "dataDisks": []
+                },
+                "osProfile": {
+                    "computerName": "[parameters('virtualMachines_cpl_cloud_mgr_name')]",
+                    "adminUsername": "azureuser",
+                    "linuxConfiguration": {
+                        "disablePasswordAuthentication": true,
+                        "ssh": {
+                            "publicKeys": [
+                                {
+                                    "path": "/home/azureuser/.ssh/authorized_keys",
+                                    "keyData": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQDB0OgATZNkWiDuRgKm1gQ4Df2h6FJTq6a9dIQSonathwmHji9Cf4vqTCZff3syf/jjoCDSB7q/doNsRSzpL8SxBsDJx1sV9heAjnLjwoKy5HIcokC78h2EqL/X5BQiejRHYJQtZ/sP4E+pGqk+jhZyfzp6ILJbSOEvsTTXymmbyjFJkKJ0ZsecQd2JUYwJjn8vyP+7G/D3TvHarRJUup39CSZFPiK0wGvBYZvp+HJ7lldpkGVETD2YS3ejbLCRt6daPM3VlmCJW4tvNHKY+PhDjMAY0HsDm5fJGLxXdXut/8BzLLOFBaO0amf5NOTB5IHm9G6o+L4sxiAcawayDVmnB/B1BwP2i4F6i2b/3GGt2eAEApFJ0n8uXhw7bxlQG43XzrKEc3RdKwCJYvetFc/A0+8VdtvjMaoWyFClG1L58P+y53B89GVjBUNGYdkbMn7AbZ2ql0N4d1lSPgU24Z2x+wKKU9FoKniGl0VfI0MH0fr7Psm18Ol+QkMC5tzjEm0= generated-by-azure"
+                                }
+                            ]
+                        },
+                        "provisionVMAgent": true,
+                        "patchSettings": {
+                            "patchMode": "ImageDefault",
+                            "assessmentMode": "ImageDefault"
+                        }
+                    },
+                    "secrets": [],
+                    "allowExtensionOperations": true,
+                    "requireGuestProvisionSignal": true
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[parameters('networkInterfaces_cpl_cloud_mgr_externalid')]",
+                            "properties": {
+                                "deleteOption": "Detach"
+                            }
+                        }
+                    ]
+                },
+                "diagnosticsProfile": {
+                    "bootDiagnostics": {
+                        "enabled": true
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Compute/virtualMachines/extensions",
+            "apiVersion": "2024-07-01",
+            "name": "[concat(parameters('virtualMachines_cpl_cloud_mgr_name'), '/enablevmAccess')]",
+            "location": "southcentralus",
+            "dependsOn": [
+                "[resourceId('Microsoft.Compute/virtualMachines', parameters('virtualMachines_cpl_cloud_mgr_name'))]"
+            ],
+            "properties": {
+                "autoUpgradeMinorVersion": true,
+                "publisher": "Microsoft.OSTCExtensions",
+                "type": "VMAccessForLinux",
+                "typeHandlerVersion": "1.5",
+                "settings": {},
+                "protectedSettings": {
+                    "username": "[parameters('extensions_enablevmAccess_username')]",
+                    "password": "[parameters('extensions_enablevmAccess_password')]",
+                    "ssh_key": "[parameters('extensions_enablevmAccess_ssh_key')]",
+                    "reset_ssh": "[parameters('extensions_enablevmAccess_reset_ssh')]",
+                    "remove_user": "[parameters('extensions_enablevmAccess_remove_user')]",
+                    "expiration": "[parameters('extensions_enablevmAccess_expiration')]"
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Compute/virtualMachines/extensions",
+            "apiVersion": "2024-07-01",
+            "name": "[concat(parameters('virtualMachines_cpl_cloud_mgr_name'), '/Microsoft.Azure.NetworkWatcher')]",
+            "location": "southcentralus",
+            "dependsOn": [
+                "[resourceId('Microsoft.Compute/virtualMachines', parameters('virtualMachines_cpl_cloud_mgr_name'))]"
+            ],
+            "properties": {
+                "autoUpgradeMinorVersion": true,
+                "publisher": "Microsoft.Azure.NetworkWatcher",
+                "type": "NetworkWatcherAgentLinux",
+                "typeHandlerVersion": "1.4"
+            }
+        }
+    ]
+}

@@ -1,0 +1,33 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "extensions_enablevmAccess_username": {
+            "value": null
+        },
+        "extensions_enablevmAccess_password": {
+            "value": null
+        },
+        "extensions_enablevmAccess_ssh_key": {
+            "value": null
+        },
+        "extensions_enablevmAccess_reset_ssh": {
+            "value": null
+        },
+        "extensions_enablevmAccess_remove_user": {
+            "value": null
+        },
+        "extensions_enablevmAccess_expiration": {
+            "value": null
+        },
+        "virtualMachines_cpl_cloud_mgr_name": {
+            "value": null
+        },
+        "disks_itf_cpl_cloud_mgr_OsDisk_1_externalid": {
+            "value": null
+        },
+        "networkInterfaces_itf_cpl_cloud_mgr_externalid": {
+            "value": null
+        }
+    }
+}
