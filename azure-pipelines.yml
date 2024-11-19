@@ -20,6 +20,6 @@ steps:
     location: 'South Central US'
     templateLocation: 'URL of the file'
     csmFileLink: 'https://raw.githubusercontent.com/rgarlington/cloudmgrarm/refs/heads/main/cloudmanager_template.json'
-    overrideParameters: '-projectName ITF-CloudManager'
+    overrideParameters: '-projectName ITF-CPLITFCloudManager'
     deploymentMode: 'Incremental'
-    deploymentName: 'deploycloudmgr'
+    deploymentName: 'DeployCloudMgr'
